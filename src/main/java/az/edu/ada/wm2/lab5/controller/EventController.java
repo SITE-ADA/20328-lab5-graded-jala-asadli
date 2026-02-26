@@ -23,6 +23,7 @@ public class EventController {
     public EventController(EventService eventService) {
         this.eventService = eventService;
     }
+
     // 1. CREATE - POST /api/events
     @PostMapping
     public ResponseEntity<Event> createEvent(@RequestBody Event event) {
@@ -35,16 +36,16 @@ public class EventController {
     }
 
 
-            // 2. LIST ALL - GET /api/events
-            @GetMapping
-            public ResponseEntity<List<Event>> getAllEvents() {
-                try {
-                    List<Event> events = eventService.getAllEvents();
-                    return new ResponseEntity<>(events, HttpStatus.OK);
-                } catch (Exception e) {
-                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
+    // 2. LIST ALL - GET /api/events
+    @GetMapping
+    public ResponseEntity<List<Event>> getAllEvents() {
+        try {
+            List<Event> events = eventService.getAllEvents();
+            return new ResponseEntity<>(events, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     // 3. GET ONE BY ID - GET /api/events/{id}
     @GetMapping("/{id}")
@@ -111,6 +112,20 @@ public class EventController {
 
         try {
             List<Event> events = eventService.getEventsByDateRange(start, end);
+            return new ResponseEntity<>(events, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //8
+    @GetMapping("/filter/price")
+    public ResponseEntity<List<Event>> getEventsByPriceRange(
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) {
+
+        try {
+            List<Event> events = eventService.getEventsByPriceRange(min, max);
             return new ResponseEntity<>(events, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
